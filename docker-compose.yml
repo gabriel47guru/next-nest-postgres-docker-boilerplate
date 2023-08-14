@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  server:
+    container_name: server
+    build:
+      context: ./server
+    env_file:
+      - .env
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    ports:
+      - 7007:7007
+      - 9229:9229
+    depends_on:
+      - postgres
+    restart: always
+  postgres:
+    container_name: postgres
+    image: postgres:14.0-alpine
+    env_file:
+      - .env
+    environment:
+      PG_DATA: /var/lib/postgresql/data
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+  front:
+    container_name: front
+    build:
+      context: ./client
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - server
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    restart: always
+    ports:
+      - 3000:3000
+
+
+volumes:
+  pgdata:
