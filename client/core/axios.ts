@@ -1,7 +1,7 @@
 import axios from "axios";
 import { parseCookies } from "nookies";
 
-axios.defaults.baseURL = `http://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}`;
+axios.defaults.baseURL = "http://194.62.19.114:7007";
 
 axios.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
